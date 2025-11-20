@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* read_note() {
+    char *note = malloc(32);
+    printf("Write a short note: ");
+    fgets(note, 64, stdin);   // ⚠️ Zafiyet: 32 byte'lık alana 64 byte okumaya çalışıyor
+    return note;
+}
+
+int main() {
+    char *note = read_note();
+
+    free(note);               // Bellek serbest bırakıldı
+    printf("Your note was: %s\n", note);   // ⚠️ Use-After-Free (CWE-416)
+
+    free(note);               // ⚠️ Double-Free (CWE-415)
+
+    return 0;
+}
